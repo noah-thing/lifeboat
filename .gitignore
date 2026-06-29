@@ -1,0 +1,9 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+.env
+.env.*
+# Lifeboat writes its working state here inside a target project; ignore in this repo's own examples
+.lifeboat/
+coverage/

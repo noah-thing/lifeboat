@@ -1,0 +1,57 @@
+{
+  "name": "lifeboat-cli",
+  "version": "0.1.0",
+  "description": "When your AI coding agent hits a rate limit, ban, or outage, Lifeboat fails over to another agent — or a local model — and keeps working, carrying your context.",
+  "type": "module",
+  "bin": {
+    "lifeboat": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepare": "tsc",
+    "dev": "tsx src/cli.ts",
+    "lifeboat": "tsx src/cli.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [
+    "ai",
+    "coding-agent",
+    "failover",
+    "claude-code",
+    "aider",
+    "opencode",
+    "ollama",
+    "resilience",
+    "llm",
+    "rate-limit"
+  ],
+  "author": "Noah",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/noah-thing/lifeboat.git"
+  },
+  "homepage": "https://github.com/noah-thing/lifeboat#readme",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "commander": "^13.1.0",
+    "execa": "^9.5.2",
+    "picocolors": "^1.1.1",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  }
+}
