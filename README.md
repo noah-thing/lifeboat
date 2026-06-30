@@ -1,5 +1,7 @@
 # 🛟 Lifeboat
 
+**Failover for your AI coding agent. When Claude Code hits a rate limit, ban, or outage, Lifeboat keeps working on Aider, OpenCode, or a local model — carrying your context across.**
+
 Your AI coding agent just got rate-limited in the middle of a task. Or your account hit its cap. Or it got banned and you still don't know why. Lifeboat keeps you working. It hands the same task to another agent, and when every cloud option is gone, to a local model on your own machine. Your context travels with it, so the next agent continues the work instead of starting from a blank page.
 
 ```
