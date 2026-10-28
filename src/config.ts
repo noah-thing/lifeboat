@@ -45,14 +45,14 @@ export const DEFAULT_CONFIG: Config = {
 // Tiers come from docs/RESEARCH.md. Only scale up when the memory is there.
 export function recommendLocalModel(ramGB = totalRamGB()): { model: string; note: string } {
   if (ramGB < 12)
-    return { model: "qwen2.5-coder:3b", note: "emergency tier. ~1.9 GB, degraded but okay for clarifications and simple refactors" };
-  if (ramGB < 20)
-    return { model: "qwen2.5-coder:7b", note: "sweet spot. ~3.8 GB, fast, solid coding on 16 GB Macs" };
-  if (ramGB < 36)
-    return { model: "qwen2.5-coder:14b", note: "stronger. ~9 GB, comfortable on 24 to 32 GB" };
-  if (ramGB < 56)
-    return { model: "qwen3-coder:30b", note: "high quality. MoE 30B with 3B active, needs ~24 GB free" };
-  return { model: "qwen3-coder:30b", note: "high quality with room to spare. qwen3-coder-next (80B) also fits at 64 GB and up" };
+    return { model: "qwen3.5:4b", note: "emergency tier. ~3.3 GB, good for clarifications and small edits" };
+  if (ramGB < 24)
+    return { model: "qwen3.5:9b", note: "sweet spot. ~6.6 GB, leaves room for your editor on a 16 GB Mac" };
+  if (ramGB < 48)
+    return { model: "qwen3.6:27b", note: "strong agentic coding. ~17 GB, comfortable from 32 GB" };
+  if (ramGB < 96)
+    return { model: "qwen3.6:35b-a3b", note: "MoE with 3B active, ~24 GB, fast and strong. devstral-small-2 (24B, 15 GB) is a good alternative" };
+  return { model: "qwen3-coder-next", note: "~52 GB at q4, the largest coding model Lifeboat will pick on its own" };
 }
 
 export function resolveLocalModel(model: string | undefined): string {

@@ -12,7 +12,7 @@ export const local: Adapter = {
   id: "local",
   label: "Local model (Ollama)",
   binary: "ollama",
-  installHint: "brew install ollama && ollama serve, then: ollama pull qwen2.5-coder:7b",
+  installHint: "brew install ollama && ollama serve, then: ollama pull qwen3.5:9b",
   async isAvailable() {
     if (!(await hasBinary("ollama"))) return false;
     return canReach(`${ollamaBase()}/api/tags`);
