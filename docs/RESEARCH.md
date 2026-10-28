@@ -41,6 +41,15 @@ Four runtimes serve a local model on Apple silicon. Lifeboat targets Ollama firs
 
 Ollama wins for v1 because it installs in one line, serves a stable OpenAI-compatible endpoint, and answers a health check at `/api/tags`. Lifeboat checks that endpoint before it tries the local fallback.
 
+## Update 2026-10-28
+
+Four months on, the structural calls below still hold. What moved:
+
+- Codex CLI, Gemini CLI and Grok CLI all ship a headless mode with JSON output, so they joined the chain as adapters 0.2.0. Gemini CLI 0.46.0 on a free individual account now exits with `IneligibleTierError`, which Lifeboat treats as a ban and moves on.
+- The local table below is superseded. Ollama's library now carries Qwen 3.5 (0.8b to 122b) and Qwen 3.6 (27b, 35b-a3b, with `-coding` variants), plus devstral-small-2 (24B, 15 GB). `qwen3-coder-next` is 52 GB at q4, not 26 GB. The current picks are in the README. They come from Ollama's listed sizes and the model pages' own claims; Lifeboat has not benchmarked them.
+
+The original notes follow unchanged.
+
 ## Local model sizing
 
 The point of the local fallback is to keep working without slowing the machine. Lifeboat reads your RAM and picks the smallest coding model that still does real work. Numbers below come from the sizing agents.
