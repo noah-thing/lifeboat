@@ -2,11 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { nowISO } from "./util.js";
 
-/**
- * The CONTEXT BUNDLE is Lifeboat's portable, provider-neutral memory of a task.
- * It is what makes a second agent CONTINUE instead of restart, and it is the
- * thing you own — it never lives only inside a provider you can be cut off from.
- */
+// The bundle is a plain folder in the project, so it survives whichever
+// provider cuts you off.
 export interface HandoffEntry {
   at: string;
   provider: string;
@@ -51,7 +48,6 @@ export function writeManifest(cwd: string, bundleDir: string, m: BundleManifest)
   writeBundleMd(cwd, bundleDir, m);
 }
 
-/** Create the bundle for a task (or reuse it if the same task is resumed). */
 export function ensureBundle(
   cwd: string,
   bundleDir: string,
@@ -88,7 +84,6 @@ export function markStatus(cwd: string, bundleDir: string, status: BundleManifes
   writeManifest(cwd, bundleDir, m);
 }
 
-/** Render the human-readable bundle injected into a continuing agent. */
 export function writeBundleMd(cwd: string, bundleDir: string, m: BundleManifest): void {
   const lines: string[] = [
     `# Lifeboat context bundle`,
@@ -102,7 +97,7 @@ export function writeBundleMd(cwd: string, bundleDir: string, m: BundleManifest)
   if (m.history.length) {
     lines.push(`## Handoff log`);
     for (const h of m.history) {
-      lines.push(`- ${h.at} — \`${h.provider}\` → **${h.status}**${h.detail ? ` (${h.detail})` : ""}`);
+      lines.push(`- ${h.at}: \`${h.provider}\` hit **${h.status}**${h.detail ? ` (${h.detail})` : ""}`);
     }
     lines.push(``);
   }

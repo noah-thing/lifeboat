@@ -4,10 +4,6 @@ import { classify } from "../detector.js";
 import { hasBinary } from "../util.js";
 import { buildPrompt, firstLine } from "./shared.js";
 
-/**
- * The universal workhorse. Aider routes to almost any cloud model and to local
- * Ollama through one `--model` flag, so a single adapter covers a lot of ground.
- */
 export const aider: Adapter = {
   id: "aider",
   label: "Aider",

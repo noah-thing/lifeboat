@@ -19,7 +19,7 @@ const program = new Command();
 program
   .name("lifeboat")
   .description(
-    "Keep coding when your AI agent gets cut off. Fail over across agents, then to a local model, and carry your context the whole way.",
+    "Fail over to another coding agent, then to a local model, when your agent is rate limited, banned or down.",
   )
   .version("0.1.0");
 
@@ -37,7 +37,7 @@ program
   .argument("<task...>", "what you want done")
   .option("-f, --file <files...>", "files in scope", [])
   .option("--chain <ids>", "comma-separated provider chain override")
-  .option("--simulate <status>", "force the first provider to report a status (for demos)")
+  .option("--simulate <status>", "force the first provider to report a status")
   .option("--simulate-provider <id>", "which provider to simulate the status on")
   .option("--dry-run", "show the plan without invoking any agent")
   .action(async (taskParts: string[], options: RunOpts) => {
@@ -52,7 +52,7 @@ program
     const task = taskParts.join(" ");
     const files = options.file ?? [];
 
-    log.title("🛟  Lifeboat");
+    log.title("Lifeboat");
     log.dim(`chain: ${config.providerChain.join(" → ")}`);
 
     let simulate;
@@ -92,7 +92,7 @@ program
     const ram = totalRamGB();
     const rec = recommendLocalModel(ram);
 
-    log.title("🛟  Lifeboat doctor");
+    log.title("Lifeboat doctor");
     log.info(`This Mac: ${c.bold(`${ram} GB`)} RAM`);
     log.info(`Suggested local model: ${c.bold(rec.model)}`);
     log.dim(`  ${rec.note}`);
@@ -125,7 +125,7 @@ program
       log.warn("No Lifeboat bundle here yet. Run a task with `lifeboat run` first.");
       return;
     }
-    log.title("🛟  Current task");
+    log.title("Current task");
     log.info(`Task:    ${m.task}`);
     log.info(`Status:  ${m.status}`);
     log.info(`Updated: ${m.updatedAt}`);
@@ -160,7 +160,7 @@ program
       log.ok(`Wrote ${p}. Edit the provider chain or models there.`);
       return;
     }
-    log.title("🛟  Lifeboat config");
+    log.title("Lifeboat config");
     console.log(JSON.stringify(loadConfig(cwd), null, 2));
   });
 

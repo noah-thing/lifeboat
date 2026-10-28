@@ -3,17 +3,11 @@ import { resolveLocalModel } from "../config.js";
 import { canReach, hasBinary } from "../util.js";
 import { buildPrompt } from "./shared.js";
 
-/** Where Ollama serves. Override with LIFEBOAT_OLLAMA_URL for a custom port or a remote box. */
+/** LIFEBOAT_OLLAMA_URL overrides the default port, for a custom setup or a remote machine. */
 function ollamaBase(): string {
   return process.env.LIFEBOAT_OLLAMA_URL ?? "http://localhost:11434";
 }
 
-/**
- * The last resort. A local model never gets rate-limited or banned and needs no
- * API key, so it keeps you moving when every cloud option is gone. Quality
- * drops, and that is the point: this is the difference between a save point and
- * a dead stop.
- */
 export const local: Adapter = {
   id: "local",
   label: "Local model (Ollama)",

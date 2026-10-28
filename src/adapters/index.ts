@@ -4,7 +4,7 @@ import { aider } from "./aider.js";
 import { opencode } from "./opencode.js";
 import { local } from "./local.js";
 
-/** Every adapter Lifeboat knows about. Add a new agent by adding one file here. */
+// A new agent is one file in this folder plus an entry here.
 export const ADAPTERS: Adapter[] = [claudeCode, aider, opencode, local];
 
 const BY_ID = new Map<string, Adapter>(ADAPTERS.map((a) => [a.id, a]));

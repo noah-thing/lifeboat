@@ -12,7 +12,7 @@ export interface RunOptions {
   config: Config;
   simulate?: Simulation;
   dryRun?: boolean;
-  /** override how provider ids map to adapters (used by tests) */
+  /** Replaces the adapter lookup. Tests use it to inject stubs. */
   resolveAdapter?: (id: string) => Adapter | undefined;
 }
 
@@ -22,10 +22,7 @@ export interface RunOutcome {
   attempts: AttemptResult[];
 }
 
-/**
- * The SUPERVISOR. Walk the provider chain; on a failover status, record a
- * handoff and carry the bundle to the next agent so it CONTINUES the task.
- */
+/** Walks the provider chain, recording a handoff each time an agent hits a wall. */
 export async function runWithFailover(o: RunOptions): Promise<RunOutcome> {
   const { task, files, cwd, config } = o;
   const bundleDir = config.bundleDir;
@@ -39,12 +36,12 @@ export async function runWithFailover(o: RunOptions): Promise<RunOutcome> {
   for (const providerId of config.providerChain) {
     const adapter = resolve(providerId);
     if (!adapter) {
-      log.warn(`unknown provider "${providerId}" in chain — skipping`);
+      log.warn(`unknown provider "${providerId}" in chain, skipping`);
       continue;
     }
 
     if (!(await adapter.isAvailable(cwd))) {
-      log.dim(`  ${adapter.label}: not installed — skipping  ·  ${adapter.installHint}`);
+      log.dim(`  ${adapter.label}: not installed, skipping (${adapter.installHint})`);
       attempts.push({ status: "unavailable", provider: providerId });
       continue;
     }
@@ -65,7 +62,7 @@ export async function runWithFailover(o: RunOptions): Promise<RunOutcome> {
     );
 
     if (o.dryRun) {
-      log.dim(`  dry run — would invoke \`${adapter.binary}\``);
+      log.dim(`  dry run, would invoke \`${adapter.binary}\``);
       attempts.push({ status: "ok", provider: providerId, detail: "dry-run" });
       return { finalStatus: "completed", winner: providerId, attempts };
     }
@@ -84,7 +81,7 @@ export async function runWithFailover(o: RunOptions): Promise<RunOutcome> {
     if (result.res.status === "transient") {
       for (let tries = 1; tries <= config.retry.transientMax; tries++) {
         log.warn(
-          `${adapter.label}: transient issue — retry ${tries}/${config.retry.transientMax} in ${config.retry.backoffMs}ms`,
+          `${adapter.label}: transient issue, retry ${tries}/${config.retry.transientMax} in ${config.retry.backoffMs}ms`,
         );
         await sleep(config.retry.backoffMs);
         const r = await attempt(adapter, ctx, opts, o, providerId, true);
@@ -108,7 +105,7 @@ export async function runWithFailover(o: RunOptions): Promise<RunOutcome> {
       });
       log.err(
         `${adapter.label} hit ${c.bold(result.res.status)}` +
-          `${result.res.detail ? c.dim(` (${result.res.detail})`) : ""}.  ${c.cyan("Launching the lifeboat →")}`,
+          `${result.res.detail ? c.dim(` (${result.res.detail})`) : ""}.  ${c.cyan("Failing over.")}`,
       );
     }
     resumed = true;

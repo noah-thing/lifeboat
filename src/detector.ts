@@ -6,12 +6,9 @@ export interface Signal {
   stderr?: string;
 }
 
-/**
- * Ordered classifier. The order matters: an account problem often *also* shows
- * a 401/403, so we check "banned" before the generic rate/limit bucket.
- * Patterns are intentionally broad — every agent CLI words its errors
- * differently, and Lifeboat only needs the category, not the exact message.
- */
+// Order matters: an account problem often also shows a 401 or 403, so banned
+// is checked before the rate limit bucket. The patterns are broad because every
+// agent CLI words its errors differently.
 const PATTERNS: Array<{ status: Status; re: RegExp }> = [
   {
     status: "banned",
@@ -31,17 +28,13 @@ const PATTERNS: Array<{ status: Status; re: RegExp }> = [
   },
 ];
 
-/**
- * Classify one attempt from a process's exit code + captured output.
- * Adapters call this so the failover logic lives in exactly one place.
- */
 export function classify(signal: Signal): Status {
   const hay = `${signal.stdout ?? ""}\n${signal.stderr ?? ""}`;
   for (const { status, re } of PATTERNS) {
     if (re.test(hay)) return status;
   }
   if (signal.code === 0) return "ok";
-  // Unknown non-zero exit → transient, so the router retries once; the retry
-  // cap then prevents an infinite loop on a genuinely broken provider.
+  // Unknown non-zero exit counts as transient. The retry cap stops a broken
+  // provider from looping forever.
   return "transient";
 }

@@ -1,10 +1,6 @@
 import type { RunContext } from "../types.js";
 
-/**
- * Build the prompt handed to an agent. When Lifeboat is resuming after a
- * failover, the bundle goes first so the new agent picks up the thread instead
- * of starting over.
- */
+// After a failover the bundle goes first, so the new agent continues the work.
 export function buildPrompt(ctx: RunContext): string {
   const parts: string[] = [];
   if (ctx.resumed && ctx.bundleText) {

@@ -4,7 +4,7 @@ import { classify } from "../detector.js";
 import { hasBinary } from "../util.js";
 import { buildPrompt, firstLine, tryJSON } from "./shared.js";
 
-/** The shape of `claude -p --output-format json` we care about. */
+/** The fields we read from `claude -p --output-format json`. */
 interface ClaudeResult {
   type?: string;
   subtype?: string;
@@ -14,11 +14,6 @@ interface ClaudeResult {
   total_cost_usd?: number;
 }
 
-/**
- * Primary agent. Runs headless with `claude -p`, edits files under the chosen
- * permission mode, and falls back across its own models before Lifeboat ever
- * has to switch agents.
- */
 export const claudeCode: Adapter = {
   id: "claude-code",
   label: "Claude Code",
@@ -45,7 +40,6 @@ export const claudeCode: Adapter = {
     const res = await execa("claude", args, { cwd: ctx.cwd, reject: false, all: true });
     const parsed = tryJSON(res.stdout) as ClaudeResult | null;
 
-    // Trust Claude Code's own success signal when we can read it.
     if (res.exitCode === 0 && parsed?.subtype === "success" && parsed.is_error !== true) {
       return {
         status: "ok",
@@ -56,7 +50,6 @@ export const claudeCode: Adapter = {
       };
     }
 
-    // Otherwise classify from the error fields Claude gives us, plus stderr.
     const status = classify({
       code: res.exitCode,
       stdout: `${parsed?.api_error_status ?? ""} ${parsed?.result ?? res.stdout}`,

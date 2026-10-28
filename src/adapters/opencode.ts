@@ -4,11 +4,6 @@ import { classify } from "../detector.js";
 import { hasBinary } from "../util.js";
 import { buildPrompt, firstLine } from "./shared.js";
 
-/**
- * Open-source agent-level failover. When the issue is the Claude Code
- * subscription itself (not just one model), switching to a different agent is
- * the only thing that helps. OpenCode runs headless and brings its own providers.
- */
 export const opencode: Adapter = {
   id: "opencode",
   label: "OpenCode",

@@ -22,26 +22,18 @@ export const ConfigSchema = z.object({
 });
 export type Config = z.infer<typeof ConfigSchema>;
 
-/**
- * Default failover chain (from the 20-agent research, docs/RESEARCH.md):
- *   claude-code  → primary baseline; has its own model fallback
- *   aider        → universal multi-provider workhorse (cloud + local in one)
- *   opencode     → open-source AGENT-level failover (a different agent, not just a model)
- *   local        → Ollama last resort, never goes down, no API key
- */
+// Why this order is in docs/RESEARCH.md.
 export const DEFAULT_CONFIG: Config = {
   providerChain: ["claude-code", "aider", "opencode", "local"],
   providers: {
     "claude-code": {
-      // aliases track the latest models, so this keeps working across releases
+      // Aliases track the latest models across releases.
       model: "opus",
       fallbackModels: ["sonnet", "haiku"],
-      // acceptEdits lets the backup edit files headlessly without prompting.
-      // Set "bypassPermissions" for fully unattended runs that also use the shell.
+      // bypassPermissions also lets it use the shell, for fully unattended runs.
       permissionMode: "acceptEdits",
     },
-    // aider and opencode use whatever model their own config/env points at, so
-    // they work as soon as you have a key set. Pin one here if you want.
+    // Empty means the agent uses whatever model its own config or env selects.
     aider: {},
     opencode: {},
     local: { runtime: "ollama", model: "auto" },
@@ -50,12 +42,7 @@ export const DEFAULT_CONFIG: Config = {
   bundleDir: ".lifeboat",
 };
 
-/**
- * Pick a local coding model by available RAM. Tiers + numbers come straight
- * from the sizing research: qwen2.5-coder is the coding-focused sweet spot;
- * we only scale up when the unified memory is actually there, so Lifeboat
- * never bloats or thrashes the machine.
- */
+// Tiers come from docs/RESEARCH.md. Only scale up when the memory is there.
 export function recommendLocalModel(ramGB = totalRamGB()): { model: string; note: string } {
   if (ramGB < 12)
     return { model: "qwen2.5-coder:3b", note: "emergency tier. ~1.9 GB, degraded but okay for clarifications and simple refactors" };
@@ -84,7 +71,7 @@ export function loadConfig(cwd: string): Config {
       const raw = JSON.parse(fs.readFileSync(p, "utf8"));
       return ConfigSchema.parse({ ...DEFAULT_CONFIG, ...raw });
     } catch {
-      // malformed config → fall back to defaults rather than crash
+      // A malformed config falls back to the defaults.
     }
   }
   return DEFAULT_CONFIG;

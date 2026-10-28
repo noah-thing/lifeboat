@@ -2,12 +2,10 @@ import os from "node:os";
 import { execa } from "execa";
 import pc from "picocolors";
 
-/** Total physical RAM in GiB (rounded). */
 export function totalRamGB(): number {
   return Math.round(os.totalmem() / 1024 ** 3);
 }
 
-/** Is a command on PATH? (darwin/linux) */
 export async function hasBinary(cmd: string): Promise<boolean> {
   try {
     await execa("command", ["-v", cmd], { shell: true });
@@ -17,7 +15,6 @@ export async function hasBinary(cmd: string): Promise<boolean> {
   }
 }
 
-/** Best-effort: is something serving an HTTP endpoint? */
 export async function canReach(url: string, timeoutMs = 1200): Promise<boolean> {
   try {
     const ctrl = new AbortController();

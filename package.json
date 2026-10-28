@@ -1,7 +1,7 @@
 {
   "name": "lifeboat-cli",
   "version": "0.1.0",
-  "description": "When your AI coding agent hits a rate limit, ban, or outage, Lifeboat fails over to another agent — or a local model — and keeps working, carrying your context.",
+  "description": "Fail over to another coding agent, then to a local model, when your agent is rate limited, banned or down.",
   "type": "module",
   "bin": {
     "lifeboat": "dist/cli.js"
@@ -21,26 +21,14 @@
     "test:watch": "vitest"
   },
   "keywords": [
-    "ai",
     "coding-agent",
-    "agentic-ai",
-    "ai-agents",
     "failover",
-    "fallback",
-    "resilience",
     "rate-limit",
-    "outage",
     "claude-code",
-    "anthropic",
     "aider",
     "opencode",
     "ollama",
-    "local-llm",
-    "llm",
-    "llmops",
-    "cli",
-    "devtools",
-    "developer-tools"
+    "cli"
   ],
   "author": "Noah",
   "license": "MIT",
