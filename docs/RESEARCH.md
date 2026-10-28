@@ -1,6 +1,6 @@
 # Research behind Lifeboat's defaults
 
-Twenty research agents mapped the landscape on 2026-06-29: which coding agents can stand in for Claude Code, which cloud models continue a task without losing quality, and which local models run well on a MacBook without bogging it down. This doc records the calls Lifeboat ships with and why. Treat exact prices and version numbers as a snapshot; the shape of the decisions is what matters.
+This is a survey of the landscape as of 2026-06-29: which coding agents can stand in for Claude Code, which cloud models continue a task without losing quality, and which local models run well on a MacBook without bogging it down. This doc records the calls Lifeboat ships with and why. Treat exact prices and version numbers as a snapshot; the shape of the decisions is what matters.
 
 ## Failover targets (the agents)
 
@@ -67,4 +67,4 @@ That last combination is the open space. Routers solve the model problem. Lifebo
 
 ## Sources
 
-The full structured output from all 20 agents lives in the workflow result for this run. Pricing, model names, and version numbers reflect 2026-06-29 and will drift. The structural calls (Ollama for local, Aider for breadth, RAM-based sizing, agent-level failover as the wedge) are built to outlast the specifics.
+Pricing, model names, and version numbers reflect 2026-06-29 and will drift. The structural calls (Ollama for local, Aider for breadth, RAM-based sizing, agent-level failover as the wedge) are built to outlast the specifics.
