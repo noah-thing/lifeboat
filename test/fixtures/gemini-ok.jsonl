@@ -1,0 +1,4 @@
+{"type":"init","session_id":"s1","model":"gemini-3-pro"}
+{"type":"message","role":"user","content":"Reply with ok"}
+{"type":"message","role":"assistant","content":"ok","delta":true}
+{"type":"result","status":"success","stats":{"total_tokens":120,"output_tokens":2}}

@@ -1,0 +1,1 @@
+2026-10-28T14:49:53.486523Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer error=\"invalid_token\"" })

@@ -39,7 +39,10 @@ export interface ProviderOptions {
   model?: string;
   /** Passed to Claude Code as --fallback-model. */
   fallbackModels?: string[];
-  /** Claude Code only: acceptEdits, bypassPermissions or default. */
+  /**
+   * acceptEdits (default), bypassPermissions or manual. Claude Code takes all three;
+   * Codex, Gemini and Grok map them to their own sandbox and approval flags.
+   */
   permissionMode?: string;
   runtime?: string;
   /** Appended to the agent command line. */

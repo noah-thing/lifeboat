@@ -36,3 +36,33 @@ export function tryJSON(s: string): unknown {
     return null;
   }
 }
+
+/** Parses newline-delimited JSON, skipping lines that are not JSON (CLIs mix log noise into stdout). */
+export function parseJsonLines(text: string | undefined): Array<Record<string, unknown>> {
+  const out: Array<Record<string, unknown>> = [];
+  for (const line of (text ?? "").split("\n")) {
+    const t = line.trim();
+    if (!t.startsWith("{")) continue;
+    const v = tryJSON(t);
+    if (v && typeof v === "object" && !Array.isArray(v)) out.push(v as Record<string, unknown>);
+  }
+  return out;
+}
+
+export function str(v: unknown): string | undefined {
+  return typeof v === "string" && v.length > 0 ? v : undefined;
+}
+
+export function rec(v: unknown): Record<string, unknown> | undefined {
+  return v && typeof v === "object" && !Array.isArray(v) ? (v as Record<string, unknown>) : undefined;
+}
+
+/** The most telling line of an error dump: the first one that names an error, else the first line. */
+export function errorLine(s: string | undefined, max = 240): string | undefined {
+  if (!s) return undefined;
+  const hit = s
+    .split("\n")
+    .map((l) => l.trim())
+    .find((l) => /error|fail|denied|limit|quota|exhausted|unauthor|log ?in|sign/i.test(l));
+  return firstLine(hit ?? s, max);
+}

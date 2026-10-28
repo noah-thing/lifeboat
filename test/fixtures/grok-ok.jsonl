@@ -1,0 +1,4 @@
+{"type":"available_commands","tools":["read_file","write"],"commands":["compact"]}
+{"type":"text","data":"ok"}
+{"type":"usage","usage":{"input_tokens":20877,"output_tokens":33}}
+{"type":"end","stopReason":"end_turn","sessionId":"01a182fd","total_cost_usd":0.047008}

@@ -12,15 +12,15 @@ export interface Signal {
 const PATTERNS: Array<{ status: Status; re: RegExp }> = [
   {
     status: "banned",
-    re: /\b(401|403)\b|unauthor|forbidden|invalid[_\s-]?api[_\s-]?key|authentication (failed|error)|account.{0,24}(suspend|ban|disabl|deactiv)|\bbanned\b|access (denied|revoked)/i,
+    re: /\b(401|403)\b|unauthor|forbidden|invalid[_\s-]?api[_\s-]?key|authentication (failed|error)|account.{0,24}(suspend|ban|disabl|deactiv)|\bbanned\b|access (denied|revoked)|ineligibletier|not (logged|signed) in|please run \/login|(codex|grok) login|token (has )?(expired|been revoked)|permission_denied|api key not valid|no longer supported for/i,
   },
   {
     status: "rate_limited",
-    re: /\b429\b|\b529\b|rate[_\s-]?limit|quota|too many requests|overloaded|usage limit|out of (credits|capacity)|insufficient[_\s-]?(quota|credit)|billing (hard )?limit/i,
+    re: /\b429\b|\b529\b|rate[_\s-]?limit|quota|too many requests|overloaded|usage limit|out of (credits|capacity)|insufficient[_\s-]?(quota|credit)|billing (hard )?limit|resource_exhausted|usage_limit_reached|hit your usage limit|exceeded your current quota|capacity_exhausted|no capacity available|at capacity|credit balance is too low/i,
   },
   {
     status: "outage",
-    re: /\b(500|502|503|504)\b|service unavailable|internal server error|econnrefused|connection refused|getaddrinfo|enotfound|bad gateway|gateway timeout/i,
+    re: /\b(500|502|503|504)\b|service unavailable|internal server error|econnrefused|connection refused|getaddrinfo|enotfound|bad gateway|gateway timeout|stream disconnected|fetch failed|high demand|\bunavailable\b/i,
   },
   {
     status: "transient",

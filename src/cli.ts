@@ -1,19 +1,24 @@
 #!/usr/bin/env node
 import process from "node:process";
+import fs from "node:fs";
+import { createRequire } from "node:module";
 import { Command } from "commander";
 import {
   DEFAULT_CONFIG,
+  configPath,
   loadConfig,
   recommendLocalModel,
   saveConfig,
 } from "./config.js";
 import { runWithFailover } from "./router.js";
-import { ADAPTERS } from "./adapters/index.js";
+import { ADAPTERS, getAdapter } from "./adapters/index.js";
 import { ensureBundle, loadManifest } from "./bundle.js";
 import { canReach, c, hasBinary, log, totalRamGB } from "./util.js";
 import type { Status } from "./types.js";
 
 const VALID_STATUS: Status[] = ["ok", "transient", "rate_limited", "banned", "outage", "unavailable"];
+
+const { version } = createRequire(import.meta.url)("../package.json") as { version: string };
 
 const program = new Command();
 program
@@ -21,7 +26,7 @@ program
   .description(
     "Fail over to another coding agent, then to a local model, when your agent is rate limited, banned or down.",
   )
-  .version("0.1.0");
+  .version(version);
 
 interface RunOpts {
   file?: string[];
@@ -42,7 +47,15 @@ program
   .option("--dry-run", "show the plan without invoking any agent")
   .action(async (taskParts: string[], options: RunOpts) => {
     const cwd = process.cwd();
-    const config = loadConfig(cwd);
+    const config = { ...loadConfig(cwd) };
+    if (!options.chain && !fs.existsSync(configPath(cwd))) {
+      // With no config of your own, the default chain shrinks to what is installed on this machine.
+      const ready = [];
+      for (const id of config.providerChain) {
+        if (await getAdapter(id)?.isAvailable(cwd)) ready.push(id);
+      }
+      if (ready.length) config.providerChain = ready;
+    }
     if (options.chain) {
       config.providerChain = options.chain
         .split(",")

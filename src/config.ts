@@ -13,7 +13,7 @@ export const ProviderOptionsSchema = z.object({
 
 export const ConfigSchema = z.object({
   providerChain: z.array(z.string()),
-  providers: z.record(ProviderOptionsSchema),
+  providers: z.record(z.string(), ProviderOptionsSchema),
   retry: z.object({
     transientMax: z.number().int().min(0),
     backoffMs: z.number().int().min(0),
@@ -24,7 +24,7 @@ export type Config = z.infer<typeof ConfigSchema>;
 
 // Why this order is in docs/RESEARCH.md.
 export const DEFAULT_CONFIG: Config = {
-  providerChain: ["claude-code", "aider", "opencode", "local"],
+  providerChain: ["claude-code", "codex", "gemini", "grok", "aider", "opencode", "local"],
   providers: {
     "claude-code": {
       // Aliases track the latest models across releases.
@@ -34,6 +34,10 @@ export const DEFAULT_CONFIG: Config = {
       permissionMode: "acceptEdits",
     },
     // Empty means the agent uses whatever model its own config or env selects.
+    // Model names for these three change every few months, so they are not pinned here.
+    codex: {},
+    gemini: {},
+    grok: {},
     aider: {},
     opencode: {},
     local: { runtime: "ollama", model: "auto" },

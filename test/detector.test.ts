@@ -33,4 +33,20 @@ describe("classify", () => {
   it("treats an unknown non-zero exit as transient", () => {
     expect(classify({ code: 2, stderr: "something nobody planned for" })).toBe("transient");
   });
+
+  it("catches Codex's usage limit", () => {
+    expect(classify({ code: 1, stderr: "You've hit your usage limit. Try again later." })).toBe("rate_limited");
+  });
+
+  it("catches Gemini's RESOURCE_EXHAUSTED", () => {
+    expect(classify({ code: 1, stderr: "RESOURCE_EXHAUSTED: Quota exceeded" })).toBe("rate_limited");
+  });
+
+  it("catches a signed out CLI as banned", () => {
+    expect(classify({ code: 1, stderr: "Not logged in. Run `codex login`." })).toBe("banned");
+  });
+
+  it("catches a dropped Codex stream as outage", () => {
+    expect(classify({ code: 1, stderr: "stream disconnected before completion" })).toBe("outage");
+  });
 });
